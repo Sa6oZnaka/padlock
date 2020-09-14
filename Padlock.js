@@ -2,46 +2,37 @@ export class Padlock {
 
     constructor(cipher) {
         this.cipher = cipher;
-        this.symbols = new Map();
     }
 
     decrypt() {
+        return this.getFirstDigits(this.sort(this.getSymbolCount(this.cipher)));
+    }
 
-        // GET SYMBOL COUNT
-
+    getSymbolCount(cipher){
+        let symbolCount = new Map();
         for (let i = 0; i < this.cipher.length; i++) {
-
-            if (this.symbols.has(this.cipher[i]))
-                this.symbols.set(this.cipher[i], this.getCount(this.cipher[i]) + 1);
+            let symbol = this.cipher[i];
+            if (symbolCount.has(symbol))
+                symbolCount.set(symbol, symbolCount.get(symbol) + 1);
             else
-                this.symbols.set(this.cipher[i], 1);
-
+                symbolCount.set(symbol, 1);
         }
-        console.log(this.symbols);
+        return symbolCount;
+    }
 
-        let mapAsc = new Map([...this.symbols.entries()].sort());
-        console.log(mapAsc);
+    sort(map) {
+        return new Map([...map].sort((a, b) => (a[1] < b[1] && 1) || (a[1] === b[1] ? 0 : -1)));
+    }
 
-        // SORT
-
-        let b =  new Map([...this.symbols].sort((a, b) => (a[1] < b[1] && 1) || (a[1] === b[1] ? 0 : -1)))
-        console.log(b);
-
-        // GET FIRST 4
+    getFirstDigits(map, n = 4){
+        if(map.size < n)
+            throw new Error("Incorrect input! Make sure you have entered at least " + n + " numbers!");
 
         let code = "";
-        for(let i = 0; i < 4; i ++) {
-            code += b.keys().next().value;
-            b.delete(b.keys().next().value);
+        for (let i = 0; i < n; i++) {
+            code += map.keys().next().value;
+            map.delete(map.keys().next().value);
         }
-        console.log(code);
-
-
+        return code;
     }
-
-    getCount(symbol) {
-        return this.symbols.get(symbol);
-    }
-
-
 }
