@@ -1,3 +1,7 @@
+#IntelJ
+.idea
+
+
 # Logs
 logs
 *.log
